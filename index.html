@@ -142,6 +142,7 @@
 <div class="cols" id="app" style="display:none">
   <div class="panel pool">
     <h2>업무 풀 — 내가 하는 일을 누르세요</h2>
+    <p style="font-size:12px; color:#8a948a; margin:-2px 0 10px; line-height:1.5">✓ 표시된 건 이 직종이 <b>보통 하는 업무</b>라 미리 담았어요. 안 하면 다시 눌러 빼고, 빠진 건 아래 검색·직접추가로 채우세요.</p>
     <input class="search" id="search" placeholder="🔍 업무 검색 (예: 송영, 투약, 청구)">
     <div class="chips" id="cycleChips"></div>
     <div id="poolList"></div>
@@ -215,11 +216,21 @@ function start(staff, job) {
   state.staff = staff; state.job = job;
   if (!state.picked) state.picked = {};
   if (!state.custom) state.custom = [];
+  // 신규 시작 시: 직종 추천 기본 세트(2명 이상 공통 · 사용중 업무)를 미리 담기
+  let seeded = false;
+  if (!state.seeded && Object.keys(state.picked).length === 0) {
+    PRESET.jobs[job].tasks.forEach(t => {
+      if ((t.src_count || 0) >= 2 && t.status === "active") state.picked[t.id] = true;
+    });
+    seeded = Object.keys(state.picked).length > 0;
+  }
+  state.seeded = true;
   document.getElementById("start").style.display = "none";
   document.getElementById("appHeader").style.display = "flex";
   document.getElementById("app").style.display = "grid";
   document.getElementById("whoLabel").textContent = `${staff} 님 · ${job}`;
   buildChips(); renderPool(); renderMine(); persist();
+  if (seeded) showToast("✨ 보통 하는 업무를 미리 담았어요 — 확인 후 빼거나 추가하세요");
 }
 
 // ---------- 필터 칩 ----------
