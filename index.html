@@ -1,0 +1,383 @@
+<title>노리 직무기술서 작성</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    background: #eef2ea; color: #2c352c; line-height: 1.5; }
+  button { font-family: inherit; cursor: pointer; }
+
+  /* 시작 화면 */
+  #start { position: fixed; inset: 0; background: #eef2ea; display: flex; align-items: center; justify-content: center; z-index: 50; padding: 20px; }
+  .start-card { background: #fff; border-radius: 18px; padding: 32px 28px; max-width: 420px; width: 100%; box-shadow: 0 8px 30px rgba(60,74,56,.12); }
+  .start-card h1 { font-size: 21px; color: #3a4a38; font-weight: 800; }
+  .start-card p { font-size: 13px; color: #6f7a6d; margin: 6px 0 20px; }
+  .start-card label { font-size: 13px; font-weight: 700; color: #4f5a4d; display: block; margin-bottom: 6px; }
+  .start-card input { width: 100%; padding: 12px 14px; border: 1px solid #cdd8c6; border-radius: 10px; font-size: 16px; margin-bottom: 18px; }
+  .jobpick { display: flex; gap: 8px; margin-bottom: 22px; }
+  .jobpick button { flex: 1; padding: 14px 0; border: 1px solid #cdd8c6; background: #f6f9f3; border-radius: 10px; font-size: 15px; font-weight: 700; color: #5a7a5a; }
+  .jobpick button.on { background: #5a7a5a; color: #fff; border-color: #5a7a5a; }
+  .start-card .go { width: 100%; padding: 14px; background: #5a7a5a; color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 800; }
+  .start-card .go:disabled { background: #c2cdbd; }
+  .resume { font-size: 12px; color: #8a948a; margin-top: 14px; text-align: center; }
+  .resume a { color: #5a7a5a; font-weight: 700; cursor: pointer; text-decoration: underline; }
+
+  /* 헤더 */
+  header { background: #fff; border-bottom: 1px solid #dde4d8; padding: 12px 18px; position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  header .who { font-size: 16px; font-weight: 800; color: #3a4a38; }
+  header .cnt { font-size: 13px; color: #5a7a5a; background: #eaf0e6; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
+  header .sp { flex: 1; }
+  header button { border: 1px solid #cdd8c6; background: #fff; border-radius: 9px; padding: 9px 16px; font-size: 14px; font-weight: 700; color: #4f5a4d; }
+  header button.prim { background: #5a7a5a; color: #fff; border-color: #5a7a5a; }
+
+  /* 본문 2단 */
+  .cols { display: grid; grid-template-columns: 1fr 380px; gap: 16px; max-width: 1180px; margin: 0 auto; padding: 16px; align-items: start; }
+  .panel { background: #fff; border: 1px solid #dde4d8; border-radius: 14px; padding: 14px; }
+  .mine { position: sticky; top: 70px; }
+  .panel h2 { font-size: 15px; font-weight: 800; color: #3a4a38; margin-bottom: 10px; }
+
+  .search { width: 100%; padding: 10px 12px; border: 1px solid #cdd8c6; border-radius: 9px; font-size: 14px; margin-bottom: 10px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .chip { font-size: 12px; padding: 5px 11px; border: 1px solid #cdd8c6; border-radius: 16px; background: #f6f9f3; color: #5a7a5a; font-weight: 600; }
+  .chip.on { background: #5a7a5a; color: #fff; border-color: #5a7a5a; }
+
+  .sec-title { font-size: 13px; font-weight: 800; color: #7a857a; margin: 14px 0 8px; }
+  .item { border: 1px solid #e2e8dd; border-radius: 10px; padding: 10px 12px; margin-bottom: 7px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start; transition: .12s; }
+  .item:hover { border-color: #5a7a5a; background: #f9fbf7; }
+  .item.picked { opacity: .45; background: #eef2ea; }
+  .item .chk { width: 20px; height: 20px; border: 2px solid #c2cdbd; border-radius: 6px; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #fff; }
+  .item.picked .chk { background: #5a7a5a; border-color: #5a7a5a; }
+  .item .body { flex: 1; min-width: 0; }
+  .item .nm { font-size: 14px; font-weight: 600; color: #2c352c; }
+  .item .ds { font-size: 11.5px; color: #8a948a; margin-top: 2px; }
+  .item .tags { margin-top: 4px; }
+  .tag { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 6px; margin: 2px 4px 0 0; }
+  .t-area { background: #eaf0e6; color: #5a7a5a; }
+  .t-sys { background: #e6eef5; color: #4a6a8a; }
+  .t-pub { background: #f7eecb; color: #8a6d12; font-weight: 700; }
+  .t-dep { background: #f0d2d2; color: #9e3b3b; font-weight: 700; }
+  .item.dep { opacity: .6; }
+  .item.dep .nm { color: #9e3b3b; }
+
+  /* 내 직무기술서 */
+  .add { display: flex; gap: 6px; margin-bottom: 12px; }
+  .add input { flex: 1; padding: 9px 11px; border: 1px solid #cdd8c6; border-radius: 8px; font-size: 13px; }
+  .add select { padding: 9px 6px; border: 1px solid #cdd8c6; border-radius: 8px; font-size: 13px; }
+  .add button { background: #5a7a5a; color: #fff; border: none; border-radius: 8px; padding: 0 14px; font-weight: 800; }
+  .mine-empty { font-size: 13px; color: #a0a99c; text-align: center; padding: 30px 0; }
+  .mrow { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px dashed #e2e8dd; font-size: 13.5px; }
+  .mrow .x { color: #b85c5c; font-weight: 800; cursor: pointer; padding: 0 4px; flex-shrink: 0; }
+  .mrow .mnm { flex: 1; }
+  .mrow .mcyc { font-size: 11px; color: #8a948a; }
+  .mrow.custom .mnm::after { content: " (직접추가)"; font-size: 10px; color: #b8932a; }
+
+  .hint { font-size: 12px; color: #8a948a; margin-top: 12px; line-height: 1.6; }
+  .mrow.flash { animation: flashbg 1.1s ease; }
+  @keyframes flashbg { 0% { background: #cfe3c2; } 100% { background: transparent; } }
+
+  /* 즉시 피드백 토스트 */
+  #toast { position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%) translateY(16px);
+    background: #3a4a38; color: #fff; padding: 11px 22px; border-radius: 24px; font-size: 14px; font-weight: 700;
+    opacity: 0; pointer-events: none; transition: .22s; z-index: 90; box-shadow: 0 8px 22px rgba(0,0,0,.22); max-width: 90vw; }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast.rm { background: #9e6b4a; }
+
+  /* 모바일 하단 바 */
+  #mobileBar { display: none; }
+  @media (max-width: 820px) {
+    #mobileBar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; background: #5a7a5a; color: #fff;
+      padding: 13px 18px; align-items: center; gap: 12px; z-index: 70; box-shadow: 0 -4px 16px rgba(0,0,0,.14); }
+    #mobileBar .mb-cnt { font-weight: 800; font-size: 15px; flex: 1; }
+    #mobileBar button { background: #fff; color: #5a7a5a; border: none; border-radius: 8px; padding: 9px 15px; font-weight: 800; font-size: 14px; }
+    .cols { padding-bottom: 78px; }
+    #toast { bottom: 92px; }
+  }
+
+  /* 미리보기/출력 */
+  #preview { display: none; }
+  @media print {
+    #start, header, .cols { display: none !important; }
+    #preview { display: block !important; }
+  }
+  #preview.show { display: block; position: fixed; inset: 0; background: #fff; z-index: 60; overflow: auto; padding: 30px; }
+  .pv-tools { max-width: 800px; margin: 0 auto 16px; display: flex; gap: 8px; }
+  .pv-tools button { border: 1px solid #cdd8c6; background: #fff; border-radius: 9px; padding: 9px 16px; font-weight: 700; }
+  .pv-tools button.prim { background: #5a7a5a; color: #fff; border-color: #5a7a5a; }
+  .doc { max-width: 800px; margin: 0 auto; }
+  .doc h1 { text-align: center; font-size: 22px; margin-bottom: 18px; }
+  .doc table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+  .doc th, .doc td { border: 1px solid #999; padding: 7px 9px; font-size: 13px; text-align: left; vertical-align: top; }
+  .doc th { background: #eef2ea; font-weight: 700; }
+  .doc .meta td { width: 25%; }
+
+  @media (max-width: 820px) {
+    .cols { grid-template-columns: 1fr; }
+    .mine { position: static; }
+  }
+</style>
+
+<div id="start">
+  <div class="start-card">
+    <h1>🗂️ 내 직무기술서 만들기</h1>
+    <p>노리주간보호센터 · 내가 하는 업무를 골라 담기만 하면 됩니다. 담당·중요도는 원장님이 정합니다.</p>
+    <label>이름</label>
+    <input id="staffName" placeholder="예: 김민우" autocomplete="off">
+    <label>직종</label>
+    <div class="jobpick" id="jobPick"></div>
+    <button class="go" id="goBtn" disabled>시작하기</button>
+    <div class="resume" id="resumeBox"></div>
+  </div>
+</div>
+
+<header style="display:none" id="appHeader">
+  <span class="who" id="whoLabel"></span>
+  <span class="cnt" id="cntLabel">0개 담음</span>
+  <span class="sp"></span>
+  <button id="previewBtn">미리보기·출력</button>
+  <button class="prim" id="saveBtn">저장(파일)</button>
+</header>
+
+<div class="cols" id="app" style="display:none">
+  <div class="panel pool">
+    <h2>업무 풀 — 내가 하는 일을 누르세요</h2>
+    <input class="search" id="search" placeholder="🔍 업무 검색 (예: 송영, 투약, 청구)">
+    <div class="chips" id="cycleChips"></div>
+    <div id="poolList"></div>
+  </div>
+  <div class="panel mine">
+    <h2>내 직무기술서 <span id="mineCnt" style="color:#5a7a5a"></span></h2>
+    <div class="add">
+      <input id="customTask" placeholder="목록에 없는 내 업무 직접 추가">
+      <select id="customCycle">
+        <option value="daily">매일</option><option value="weekly">매주</option>
+        <option value="monthly">매월</option><option value="quarterly">분기</option>
+        <option value="semiannual">반기</option><option value="yearly">연간</option>
+        <option value="adhoc" selected>수시</option>
+      </select>
+      <button id="addBtn">추가</button>
+    </div>
+    <div id="mineList"></div>
+    <div class="hint">담은 업무는 자동 저장됩니다. 다 고르면 <b>저장(파일)</b>을 눌러 원장님께 보내주세요.</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="mobileBar"><span class="mb-cnt" id="mbCnt">0개 담음</span><button id="mbView">내 목록 보기 ▲</button></div>
+
+<div id="preview">
+  <div class="pv-tools">
+    <button id="pvClose">← 돌아가기</button>
+    <button class="prim" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+    <button class="prim" id="xlsBtn">📊 엑셀(.xls) 다운로드</button>
+  </div>
+  <div class="doc" id="docBody"></div>
+</div>
+
+<script>
+const PRESET = {"cycleLabels": {"daily": "매일", "weekly": "매주", "monthly": "매월", "quarterly": "분기", "semiannual": "반기", "yearly": "연간", "adhoc": "수시"}, "jobs": {"간호사": {"areas": ["어르신케어", "식사", "투약", "건강관리", "기록", "감염관리", "물리치료", "재활", "송영", "환경관리", "점검", "행정", "진료", "사정", "상담", "사례관리", "응급", "안전", "청구", "총무", "교육", "관리", "홍보", "프로그램"], "tasks": [{"id": "NUR-001", "task": "방문자·출입 위생관리", "cycle": "daily", "area": "감염관리", "systems": [], "desc": "직원·어르신·방문자 손소독 및 체온측정", "src_count": 3, "aliases": ["방문자 출입관리", "직원·어르신·방문자 손소독 체온체크"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-002", "task": "센터 환경 정비", "cycle": "daily", "area": "환경관리", "systems": [], "desc": "가림막·앞치마·식수·워커·가습기·보일러·히터·커피머신 등 센터 관리", "src_count": 3, "aliases": ["센터 정비"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-003", "task": "어르신 맞이·이동 도움", "cycle": "daily", "area": "어르신케어", "systems": [], "desc": "어르신 맞이 및 이동도움, 화장실 도움", "src_count": 3, "aliases": ["센터 어르신 케어", "아침식사 인원확인 제공준비"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-004", "task": "식사 제공·보조", "cycle": "daily", "area": "식사", "systems": [], "desc": "어르신 이동 도움, 식사 준비 및 제공", "src_count": 3, "aliases": ["식사 제공", "식사제공 및 식사보조"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-005", "task": "투약", "cycle": "daily", "area": "투약", "systems": [], "desc": "아침·점심·저녁 경구투약 및 안약(오침시간) 점적", "src_count": 2, "aliases": ["일일 투약확인 및 투약"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-006", "task": "투약 준비·약 관리", "cycle": "daily", "area": "투약", "systems": [], "desc": "다음날 투약 준비 및 약 관리, 약 카운트", "src_count": 2, "aliases": ["투약관리및 준비"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-007", "task": "간호기록·차팅(케어포)", "cycle": "daily", "area": "기록", "systems": ["케어포"], "desc": "간호일지·처치·V/S·BST·투약·이동서비스·진료기록 케어포 차팅", "src_count": 3, "aliases": ["간호기록", "간호처치기록", "케어포 기입"], "publish": false, "status": "active", "note": "원본 3개 항목을 하나로 통합"}, {"id": "NUR-008", "task": "어르신 건강 체크", "cycle": "daily", "area": "건강관리", "systems": [], "desc": "어르신 상담 및 건강체크, 활력징후·혈당(BST) 측정", "src_count": 3, "aliases": ["어르신건강관리", "v/s check", "BST", "활력징후 및 BST검사"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-009", "task": "일일 위생·비품 점검", "cycle": "daily", "area": "점검", "systems": ["케어포"], "desc": "케어포 위생소독일지, 간호비품 관리", "src_count": 3, "aliases": ["일일점검"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-010", "task": "방역·소독", "cycle": "daily", "area": "감염관리", "systems": [], "desc": "환기 및 1·4·5층·엘리베이터 소독(점심·저녁)", "src_count": 3, "aliases": ["방역", "청소및 방역"], "publish": false, "status": "review", "note": "코로나 완화로 빈도·강도 조정 검토"}, {"id": "NUR-011", "task": "어르신 개인 방역", "cycle": "daily", "area": "감염관리", "systems": [], "desc": "화장실 사용 후 손세정, 출입 시 손소독, 상시 마스크 관리", "src_count": 2, "aliases": ["어르신 방역관리"], "publish": false, "status": "review", "note": "코로나 완화로 조정 검토"}, {"id": "NUR-012", "task": "물리치료 적용", "cycle": "daily", "area": "물리치료", "systems": [], "desc": "공기압·핫팩·전기핫팩·적외선·족욕온열기 등 상태 파악 후 제공(오침시간)", "src_count": 3, "aliases": [], "publish": true, "status": "active", "note": "센터 차별점 · 월말 공시대상"}, {"id": "NUR-013", "task": "워크메이트 재활운동", "cycle": "daily", "area": "재활", "systems": ["케어포"], "desc": "워크메이트 운동, 바이탈·혈당 체크, 일지 기록", "src_count": 1, "aliases": ["워크메이트"], "publish": true, "status": "active", "note": "센터 차별점 · 월말 공시대상"}, {"id": "NUR-014", "task": "송영 준비", "cycle": "daily", "area": "송영", "systems": [], "desc": "식사 후 착의·휠체어·마스크 정비", "src_count": 3, "aliases": ["송영준비"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-015", "task": "오전 송영", "cycle": "daily", "area": "송영", "systems": [], "desc": "어르신 차량 송영", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-016", "task": "오후 송영", "cycle": "daily", "area": "송영", "systems": [], "desc": "어르신 차량 송영", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-017", "task": "오후 송영 탑승·낙상 관리", "cycle": "daily", "area": "송영", "systems": [], "desc": "질서 정립하여 낙상 방지하며 차례로 탑승 보조", "src_count": 2, "aliases": ["오후송영시 관리", "오후송영시 탑승관리"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-018", "task": "센터 청소", "cycle": "daily", "area": "환경관리", "systems": [], "desc": "송영 미참 시 주차관리·센터 청소", "src_count": 2, "aliases": ["청소"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-019", "task": "식사·간식 사진 촬영", "cycle": "daily", "area": "기록", "systems": ["밴드"], "desc": "점심·간식 사진 촬영 후 밴드 게시", "src_count": 1, "aliases": ["사진촬영"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-020", "task": "프로그램 촬영", "cycle": "daily", "area": "기록", "systems": [], "desc": "오후 프로그램 촬영", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-021", "task": "어르신 일정관리", "cycle": "daily", "area": "행정", "systems": ["케어포"], "desc": "결석·지각 어르신 케어포 일정관리", "src_count": 1, "aliases": ["일정관리"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-022", "task": "병원 진료·대리처방", "cycle": "daily", "area": "진료", "systems": [], "desc": "진료 판단·시행 및 상담 후 대리처방, 보호자 보고·영수증·수납", "src_count": 3, "aliases": [], "publish": false, "status": "active", "note": "발생이 잦아 일상으로 분류(본질은 수시)"}, {"id": "NUR-023", "task": "코로나 일일상황 등록", "cycle": "daily", "area": "감염관리", "systems": ["공단"], "desc": "공단 코로나19 일일상황·긴급돌봄 제공현황·전수검사 결과 등록", "src_count": 3, "aliases": ["건강보험공단 일일등록"], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토(긴급돌봄현황 잔존 여부 확인)"}, {"id": "NUR-024", "task": "신속항원 키트 관리", "cycle": "daily", "area": "감염관리", "systems": [], "desc": "직원 신속항원검사, 검사키트 관리·배부·결과 관리", "src_count": 2, "aliases": [], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토"}, {"id": "NUR-025", "task": "주말약 준비", "cycle": "weekly", "area": "투약", "systems": [], "desc": "매주 금요일 주말·미이용자 약 준비", "src_count": 2, "aliases": ["다음날 주말 미이용자 투약챙기기"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-026", "task": "프로그램 준비·진행·정리", "cycle": "weekly", "area": "프로그램", "systems": [], "desc": "프로그램 준비 및 진행·정리 보조", "src_count": 1, "aliases": ["프로그램준비", "프로그램진행및정리"], "publish": false, "status": "review", "note": "간호사 담당 여부 확인 필요"}, {"id": "NUR-027", "task": "약장·약품 점검", "cycle": "monthly", "area": "투약", "systems": [], "desc": "각종 의약품·비상약품 관리, 투약칸 관리·청소·점검", "src_count": 3, "aliases": ["약장(케비넷) 관리", "약품점검"], "publish": false, "status": "active", "note": "분기로 적힌 출처 있었으나 월간으로 통합"}, {"id": "NUR-028", "task": "사례관리", "cycle": "monthly", "area": "사례관리", "systems": ["케어포"], "desc": "사례관리 대상자 선정 및 회의·기록", "src_count": 3, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-029", "task": "월 체중 측정", "cycle": "monthly", "area": "건강관리", "systems": [], "desc": "매월 어르신 체중 측정", "src_count": 1, "aliases": ["어르신 건강관리(월)"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-030", "task": "신속항원 청구·관리", "cycle": "monthly", "area": "청구", "systems": [], "desc": "신속항원검사 청구 및 목록 관리", "src_count": 3, "aliases": [], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토"}, {"id": "NUR-031", "task": "블로그 포스팅", "cycle": "monthly", "area": "홍보", "systems": ["블로그"], "desc": "월 블로그 포스팅", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-032", "task": "소방시설 점검 등록", "cycle": "monthly", "area": "안전", "systems": ["케어포"], "desc": "소방시설 점검 자료 케어포 등록, 화재예방 점검표 작성", "src_count": 1, "aliases": ["소방시설"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-033", "task": "병원비 청구·확인", "cycle": "monthly", "area": "청구", "systems": [], "desc": "전달 진료 총액 계산하여 보호자 연락 후 수납", "src_count": 1, "aliases": ["병원비 청구및 확인"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-034", "task": "상담일지 작성", "cycle": "quarterly", "area": "상담", "systems": ["케어포"], "desc": "보호자·어르신 상담 후 상담일지 작성", "src_count": 3, "aliases": ["상담일지"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-035", "task": "후원물품 관리", "cycle": "quarterly", "area": "총무", "systems": [], "desc": "마스크·신속항원키트 등 후원물품 관리", "src_count": 3, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-036", "task": "신규 어르신 사정", "cycle": "adhoc", "area": "사정", "systems": ["케어포", "공단"], "desc": "보호자 상담, 욕구사정·인지기능검사(CIST)·낙상위험도, 기초평가·급여제공계획", "src_count": 3, "aliases": ["신규어르신사정", "기초평가", "CIST검사", "기초평가및 급여제공계획"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-037", "task": "어르신 등급 갱신", "cycle": "adhoc", "area": "행정", "systems": ["공단"], "desc": "의사소견서 위해 진료(신경과·내과·정형외과), 소견서 제출", "src_count": 3, "aliases": ["어르신등급갱신"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-038", "task": "어르신·보호자 상담", "cycle": "adhoc", "area": "상담", "systems": [], "desc": "약 관련·건강상태 등 각종 상담", "src_count": 2, "aliases": ["어르신& 보호자 상담", "상담", "전화응대 상담업무"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-039", "task": "건강문제·응급 대응", "cycle": "adhoc", "area": "응급", "systems": ["케어포"], "desc": "상태 파악·대처, 안전한 곳 이송, 119 신고, 병원이송, 보호자 상담·기록", "src_count": 2, "aliases": ["응급상황시 대처", "건강문제 발생"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-040", "task": "감염병 관리", "cycle": "adhoc", "area": "감염관리", "systems": [], "desc": "종사자·수급자 감염 시 대처", "src_count": 3, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-041", "task": "감염병 검사·검체 제출", "cycle": "adhoc", "area": "감염관리", "systems": [], "desc": "직원·어르신 PCR·RAT·신속항원, 보건소·달서구청 검체 제출·키트 수령", "src_count": 3, "aliases": ["PCR검사", "RAT검사", "코로나 검사및 양성자 자료관리", "보건소& 달서구청 방문"], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토"}, {"id": "NUR-042", "task": "직무 교육", "cycle": "adhoc", "area": "교육", "systems": [], "desc": "치매·보수·법정의무교육 등 수료", "src_count": 2, "aliases": ["교육"], "publish": false, "status": "active", "note": ""}, {"id": "NUR-043", "task": "차량 관리", "cycle": "adhoc", "area": "총무", "systems": [], "desc": "차량 수리·정비 필요 시 카센터 방문", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "NUR-044", "task": "사회복무요원 관리", "cycle": "adhoc", "area": "관리", "systems": [], "desc": "업무 배분 및 관리", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}]}, "사무원": {"areas": ["송영", "식사", "어르신케어", "환경관리", "회계", "청구", "인사노무", "사통망", "행정", "총무", "홍보", "사회복무요원", "프로그램", "기록", "안전", "감염관리"], "tasks": [{"id": "OFC-004", "task": "공문 확인", "cycle": "daily", "area": "행정", "systems": ["사통망", "희망이음"], "desc": "공익 출퇴근·공문 확인, 식사 개수 보내기", "src_count": 2, "aliases": ["공문확인하기", "식사 개수 보내기·공익 출퇴근 공문확인"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-007", "task": "결의서 작성", "cycle": "daily", "area": "회계", "systems": [], "desc": "계좌조회, 결의서 작성 및 보관", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-008", "task": "결의서 바인더 정리", "cycle": "daily", "area": "회계", "systems": [], "desc": "결의서 파이브바인더 꽂기", "src_count": 2, "aliases": ["결의서 파이브바인더 꽂기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-009", "task": "식사·프로그램 사진 업로드", "cycle": "daily", "area": "기록", "systems": ["밴드", "블로그"], "desc": "점심·간식·프로그램 사진 촬영 후 밴드·블로그 게시", "src_count": 2, "aliases": ["사진업로드", "밴드 올리기(프로그램)", "밴드/블로그 올리기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-011", "task": "청소 또는 오후 송영", "cycle": "daily", "area": "송영", "systems": [], "desc": "청소 시 송영 안내 후 청소 / 송영 시 보조", "src_count": 3, "aliases": ["청소 or 오후 송영"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-012", "task": "본인부담금·병원비 입금 확인", "cycle": "daily", "area": "회계", "systems": ["케어포"], "desc": "본인부담금·병원비 입금 확인 후 등록", "src_count": 1, "aliases": ["본인부담금 입금 확인", "병원비 입금 확인", "본인부담금 확인 후 등록"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-013", "task": "병원비 관리대장 기록", "cycle": "daily", "area": "회계", "systems": [], "desc": "병원비 영수증·현금 관리, 관리대장 기록", "src_count": 1, "aliases": ["병원비 영수증, 병원비현금 관리"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-014", "task": "연간지출 정리", "cycle": "daily", "area": "회계", "systems": [], "desc": "결의서 계정과목별·월별 정리", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-W01", "task": "주간 식단표 작성·게시", "cycle": "weekly", "area": "행정", "systems": ["블로그", "밴드"], "desc": "식단표 작성 후 블로그·밴드 게시", "src_count": 2, "aliases": ["주간 식단표", "주간식단표 작성", "식단표 블로그·밴드 올리기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-W02", "task": "보건소 식단표 출력", "cycle": "weekly", "area": "행정", "systems": [], "desc": "보건소 식단표 출력 후 조리실 전달", "src_count": 1, "aliases": ["부평구 보건소 식단표 뽑기"], "publish": false, "status": "review", "note": "원본에 '부평구' 표기 — 대구 달서구 기준 확인"}, {"id": "OFC-W03", "task": "직원 근태 체크", "cycle": "weekly", "area": "인사노무", "systems": [], "desc": "직원 근태 확인", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M01", "task": "급여 이체", "cycle": "monthly", "area": "회계", "systems": ["케어포"], "desc": "세후 급여 입력 후 이체 파일 업로드", "src_count": 3, "aliases": ["급여 이체하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M02", "task": "본인부담금 입금 처리·미납 알림", "cycle": "monthly", "area": "청구", "systems": [], "desc": "미납 내역 확인 후 알림톡 발송", "src_count": 2, "aliases": ["본인부담금 입금 처리"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M03", "task": "가정통신문 작성", "cycle": "monthly", "area": "홍보", "systems": [], "desc": "월 가정통신문 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M04", "task": "국세·지방세 신고", "cycle": "monthly", "area": "회계", "systems": ["케어포"], "desc": "케어포 금액 확인 후 신고", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M05", "task": "병원비 입금 확인·문자", "cycle": "monthly", "area": "회계", "systems": [], "desc": "병원비 파일 받은 후 입금 확인, 보호자 문자 발송", "src_count": 1, "aliases": ["병원비 입금 확인하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M06", "task": "예수금·식비 이체", "cycle": "monthly", "area": "회계", "systems": ["케어포"], "desc": "예수금 이체, 식비 계산·정리·이체(직원·수급자)", "src_count": 1, "aliases": ["예수금 이체", "식비 계좌이체"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M07", "task": "공익 인건비 처리", "cycle": "monthly", "area": "사회복무요원", "systems": [], "desc": "복무현황 받고 사인·스캔·보고", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M08", "task": "직원 근무일정 등록·출력", "cycle": "monthly", "area": "인사노무", "systems": ["케어포"], "desc": "리퀘스트 받아 케어포 근무일정 등록·출력", "src_count": 1, "aliases": ["근무일정 올리기", "직원근무일정표 출력"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M09", "task": "인건비 비율 등록", "cycle": "monthly", "area": "회계", "systems": [], "desc": "인건비 비율 등록", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M10", "task": "퇴직연금 관리", "cycle": "monthly", "area": "인사노무", "systems": ["공단"], "desc": "퇴직연금 가입·해지·지급신청", "src_count": 1, "aliases": ["퇴직연금"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M11", "task": "청소 체크표 관리", "cycle": "monthly", "area": "환경관리", "systems": [], "desc": "월 청소 체크표", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M12", "task": "목욕명단 출력", "cycle": "monthly", "area": "어르신케어", "systems": [], "desc": "월 목욕명단 출력", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M13", "task": "고용지원금 신청", "cycle": "monthly", "area": "회계", "systems": [], "desc": "고용안정장려금·고령자고용·청년도약장려금·육아휴직 등 신청", "src_count": 1, "aliases": ["고용안정장려금 신청", "고령자고용지원금", "청년도약장려금"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M14", "task": "다해솔루션 회계 업무", "cycle": "monthly", "area": "회계", "systems": ["다해솔루션"], "desc": "다해솔루션 회계 업무", "src_count": 1, "aliases": ["다해솔루션 업무"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M15", "task": "건강보험 EDI", "cycle": "monthly", "area": "회계", "systems": ["건강보험EDI"], "desc": "건강보험 EDI 처리", "src_count": 1, "aliases": ["건강보험edi"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M16", "task": "서비스 모니터링 자가진단 등록", "cycle": "monthly", "area": "행정", "systems": [], "desc": "서비스 모니터링 자가진단 등록", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-M17", "task": "코로나 출입명부·서류 출력", "cycle": "monthly", "area": "감염관리", "systems": [], "desc": "월초 방문일지·체온 용지·출입명부 출력", "src_count": 1, "aliases": ["코로나 서류 뽑기", "코로나 출입명부 출력"], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토"}, {"id": "OFC-S01", "task": "근로소득 간이지급명세서", "cycle": "semiannual", "area": "회계", "systems": [], "desc": "기한에 맞춰 신고(연 2회)", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-S02", "task": "시설 안전점검 신고", "cycle": "semiannual", "area": "안전", "systems": [], "desc": "안전점검표 체크 후 신고(연 2회)", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y01", "task": "노인복지시설 지도점검", "cycle": "yearly", "area": "행정", "systems": [], "desc": "지도점검 대응", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y02", "task": "보수총액신고", "cycle": "yearly", "area": "회계", "systems": [], "desc": "건강·고용·산재 보수총액 신고", "src_count": 1, "aliases": ["보수총액신고(건강,고용.산재)"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y03", "task": "연말정산", "cycle": "yearly", "area": "회계", "systems": [], "desc": "직원 연말정산 안내 후 처리, 지방소득세 연말정산", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y04", "task": "재물조사", "cycle": "yearly", "area": "총무", "systems": [], "desc": "내용연수 확인 후 문서 정리", "src_count": 1, "aliases": ["재물 조사"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y05", "task": "예산 편성", "cycle": "yearly", "area": "회계", "systems": [], "desc": "수입·지출 금액 편성", "src_count": 1, "aliases": ["예산"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-Y06", "task": "결산", "cycle": "yearly", "area": "회계", "systems": [], "desc": "계좌 잔액 확인 및 결산", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A01", "task": "사통망 인사 등록", "cycle": "adhoc", "area": "사통망", "systems": ["사통망"], "desc": "입사·퇴사 시 사통망 인사 보고", "src_count": 2, "aliases": ["입퇴사 보고"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A02", "task": "인사 서류 정리", "cycle": "adhoc", "area": "인사노무", "systems": [], "desc": "입사·퇴사·변경 시 인사 서류 정리", "src_count": 2, "aliases": ["인사 서류 정리하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A03", "task": "비품·기저귀 재고 관리", "cycle": "adhoc", "area": "총무", "systems": ["케어포"], "desc": "비품·기저귀 재고 확인(주 월·금) 및 주문", "src_count": 2, "aliases": ["비품, 기저귀 재고 관리", "비품관리", "재고 확인 후 주문"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A04", "task": "물품 구매", "cycle": "adhoc", "area": "총무", "systems": [], "desc": "재고 확인 후 물품 구매", "src_count": 2, "aliases": ["물품 구매하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A05", "task": "이름표 정리", "cycle": "adhoc", "area": "총무", "systems": [], "desc": "신발장·책상·식판 이름표 정리", "src_count": 2, "aliases": ["이름표 정리하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A07", "task": "사대보험 취득·상실 신고", "cycle": "adhoc", "area": "인사노무", "systems": [], "desc": "입사·퇴사 시 사대보험 취득·상실 신고", "src_count": 1, "aliases": ["사대보험 신고", "사대보험 신고 / 상실신고"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A08", "task": "신규 입사자 행정", "cycle": "adhoc", "area": "인사노무", "systems": ["네이버웍스", "사통망", "케어포", "푸른씨앗", "희망이음"], "desc": "필요서류 안내, 케어포·웍스·범죄경력·사대보험·푸른씨앗·희망이음 등록, 물품 지급", "src_count": 1, "aliases": ["신규 입사자", "직원 입,퇴사 관리"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A09", "task": "퇴사자 행정", "cycle": "adhoc", "area": "인사노무", "systems": [], "desc": "퇴사 행정업무, 물품 반납, 상실신고", "src_count": 1, "aliases": ["퇴소자 정리", "신규/ 퇴사자 퇴직연금"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A10", "task": "신규 입소자 준비", "cycle": "adhoc", "area": "행정", "systems": ["네이버웍스", "밴드"], "desc": "계약서 파일·자리·이름표 준비", "src_count": 1, "aliases": ["수급자 계약서 파일 만들기", "계약서A4파일 만들기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A11", "task": "수급자 입퇴소 등록", "cycle": "adhoc", "area": "사통망", "systems": ["사통망"], "desc": "입소·퇴소 시 어르신 정보·등급신청 등록", "src_count": 1, "aliases": ["수급자 입,퇴소 관리/수급자 등급신청 관리", "사통망 대상자 등록"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A12", "task": "희망이음 보고", "cycle": "adhoc", "area": "행정", "systems": ["희망이음"], "desc": "희망이음 보고", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A13", "task": "푸른씨앗 인건비 신고", "cycle": "adhoc", "area": "회계", "systems": ["푸른씨앗"], "desc": "푸른씨앗 인건비 내역 지출 신고", "src_count": 1, "aliases": ["푸른씨앗-인건비내역지출신고"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A14", "task": "장기요양인정 신청서(갱신)", "cycle": "adhoc", "area": "행정", "systems": [], "desc": "장기요양인정 신청서 갱신", "src_count": 1, "aliases": ["장기요양인정신청서 (갱신)"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A15", "task": "회의록 작성", "cycle": "adhoc", "area": "행정", "systems": ["케어포"], "desc": "회의 내용 케어포 회의록 작성", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A16", "task": "차입금대장 관리", "cycle": "adhoc", "area": "회계", "systems": [], "desc": "차입금대장 관리", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A17", "task": "직원 건강검진 조회·기록", "cycle": "adhoc", "area": "인사노무", "systems": ["케어포"], "desc": "건강검진 대상 조회, 케어포 기록", "src_count": 1, "aliases": ["건강검진 대상 조회", "직원 건강검진 여부 케어포 기록"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A18", "task": "정기소독", "cycle": "adhoc", "area": "환경관리", "systems": ["케어포"], "desc": "정기소독(남송환경) 및 소독증명서 관리", "src_count": 1, "aliases": ["정기소독(남송환경) / 소독증명서"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A19", "task": "좌석 자리표 교체", "cycle": "adhoc", "area": "환경관리", "systems": [], "desc": "수급자 좌석 변동 시 자리표 교체", "src_count": 1, "aliases": ["수급자 좌석 변동 시 자리표 교체"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A20", "task": "바이탈 기록(케어포)", "cycle": "adhoc", "area": "기록", "systems": ["케어포"], "desc": "케어포(4-1) 바이탈 기록", "src_count": 1, "aliases": ["(케어포4-1) 바이탈 기록"], "publish": false, "status": "review", "note": "간호 영역과 중복 — 사무원 담당 여부 확인"}, {"id": "OFC-A21", "task": "외부 홍보", "cycle": "adhoc", "area": "홍보", "systems": [], "desc": "외부 홍보 활동", "src_count": 1, "aliases": ["홍보하기(외부)"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A22", "task": "게시판 서류 관리", "cycle": "adhoc", "area": "행정", "systems": [], "desc": "사회복무요원 업무분장·아침식사 현황 등 게시판 서류 점검·수정·게시", "src_count": 1, "aliases": ["게시판 서류 점검 및 게시", "게시판 서류 수정하기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A23", "task": "프로그램 보조", "cycle": "adhoc", "area": "프로그램", "systems": [], "desc": "인원 부족 시 오전·오후 프로그램 보조, 사진 촬영", "src_count": 1, "aliases": ["프로그램 보조 / 사진찍기"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A24", "task": "각종 문서작업", "cycle": "adhoc", "area": "행정", "systems": [], "desc": "직원 요청 문서작업", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A25", "task": "공익 메일 확인·업무", "cycle": "adhoc", "area": "사회복무요원", "systems": [], "desc": "공익 관련 업무(점검·제복·교육) 메일 확인 후 처리", "src_count": 1, "aliases": ["메일 확인하고 업무", "메일 확인 후 업무 처리"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A27", "task": "종사자 생일 등록", "cycle": "adhoc", "area": "인사노무", "systems": ["케어포"], "desc": "종사자 생일 케어포 등록", "src_count": 1, "aliases": ["종사자 생일 등록(케어포)"], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A28", "task": "발열 체크표 출력", "cycle": "adhoc", "area": "감염관리", "systems": [], "desc": "발열 체크표 출력", "src_count": 1, "aliases": [], "publish": false, "status": "deprecated_candidate", "note": "코로나 종료로 폐지 검토"}, {"id": "OFC-A29", "task": "사회복무요원 실태조사", "cycle": "adhoc", "area": "사회복무요원", "systems": [], "desc": "사회복무요원 실태조사 대응", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "OFC-A30", "task": "기저귀 주문", "cycle": "adhoc", "area": "총무", "systems": [], "desc": "기저귀 재고 확인 후 주문", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}]}, "사회복지사": {"areas": ["행정", "송영", "어르신케어", "식사", "프로그램", "환경관리", "회계", "청구", "계약", "복지용구", "사례관리", "상담", "관리", "인사", "교육", "안전", "총무", "홍보", "사회복무요원", "기록", "외근", "감염관리"], "tasks": [{"id": "SOC-001", "task": "공문·공지 확인", "cycle": "daily", "area": "행정", "systems": ["사통망", "희망이음", "케어포"], "desc": "네이버 공용메일·사통망·희망이음·건보 공지 확인", "src_count": 2, "aliases": ["공문확인하기"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-002", "task": "업무보고·전일 확인", "cycle": "daily", "area": "행정", "systems": ["블로그"], "desc": "사복·요양팀·공익 전일 업무 확인, 블로그 노출 검색", "src_count": 1, "aliases": ["업무보고 및 전일 업무 확인"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-003", "task": "청소표 작성·관리", "cycle": "daily", "area": "환경관리", "systems": [], "desc": "청소표 작성 후 청소 관리", "src_count": 3, "aliases": ["청소표 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-004", "task": "어르신 출결·일정 관리", "cycle": "daily", "area": "행정", "systems": ["케어포"], "desc": "출결석·미이용 관리", "src_count": 2, "aliases": ["어르신 일정관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-005", "task": "이동서비스 관리", "cycle": "daily", "area": "송영", "systems": ["케어포"], "desc": "이동서비스 확인·변경 수정, 안전수칙 발송", "src_count": 3, "aliases": ["이동서비스관리", "이동서비스 확인"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-006", "task": "사회복무요원 출근·평가", "cycle": "daily", "area": "사회복무요원", "systems": [], "desc": "출근 체크, 복무상황부 서명, 업무 평가", "src_count": 2, "aliases": ["사회복무요원 평가"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-007", "task": "오전 송영", "cycle": "daily", "area": "송영", "systems": [], "desc": "어르신 차량 송영", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-008", "task": "오후 송영", "cycle": "daily", "area": "송영", "systems": [], "desc": "어르신 차량 송영", "src_count": 2, "aliases": ["오전/오후 송영"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-009", "task": "송영 차량 준비", "cycle": "daily", "area": "송영", "systems": [], "desc": "송영 차량 준비 및 종료 후 차량일지 작성", "src_count": 1, "aliases": ["오후 송영 준비"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-010", "task": "오전 프로그램 진행", "cycle": "daily", "area": "프로그램", "systems": [], "desc": "오전 프로그램 준비 및 진행", "src_count": 2, "aliases": ["오전프로그램 준비"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-011", "task": "오후 프로그램 진행·정리", "cycle": "daily", "area": "프로그램", "systems": [], "desc": "오후 프로그램 진행 및 정리", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-012", "task": "프로그램·식사 사진 촬영·게시", "cycle": "daily", "area": "기록", "systems": ["밴드", "인스타", "블로그"], "desc": "프로그램·점심·간식 촬영 후 밴드·인스타·블로그 게시", "src_count": 2, "aliases": ["프로그램 및 사진촬영", "밴드 작성", "인스타 업로드"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-017", "task": "청소·분리수거", "cycle": "daily", "area": "환경관리", "systems": [], "desc": "센터 청소 및 분리수거", "src_count": 2, "aliases": ["송영 및 청소", "청소 및 분리수거"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-018", "task": "직원 근태 관리", "cycle": "daily", "area": "관리", "systems": ["케어포"], "desc": "직원 근태 관리", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W01", "task": "블로그·SNS 게시", "cycle": "weekly", "area": "홍보", "systems": ["블로그", "인스타"], "desc": "블로그 작성 및 인스타 업로드", "src_count": 3, "aliases": ["블로그 작성", "인스타 업로드"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W02", "task": "제공기록지 점검", "cycle": "weekly", "area": "기록", "systems": ["케어포"], "desc": "제공기록지 특이사항 및 상태변화 기록 점검", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W03", "task": "사무직원 회의·교육", "cycle": "weekly", "area": "교육", "systems": [], "desc": "사무직원 회의 및 교육", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W04", "task": "월간 업무 확인·준비", "cycle": "weekly", "area": "행정", "systems": [], "desc": "다가오는 월간 업무 확인 및 준비", "src_count": 2, "aliases": ["월간업무확인"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W05", "task": "교육자료 작성", "cycle": "weekly", "area": "교육", "systems": [], "desc": "직원·어르신 교육자료 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-W06", "task": "주간 환경 점검", "cycle": "weekly", "area": "환경관리", "systems": [], "desc": "로봇청소기 트레이 세척, 방향제 점검", "src_count": 1, "aliases": ["로봇청소기 트레이 세척", "방향제 점검"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M01", "task": "가감산·청구", "cycle": "monthly", "area": "청구", "systems": ["케어포"], "desc": "가감산 전 케어포 자료 점검, 가감산 입력, 청구(급여·방역보조지원금 등)", "src_count": 2, "aliases": ["가감산", "가감산 전 케어포 자료 점검", "청구", "청구(급여,PCR,신속항원,방역보조지원금)"], "publish": false, "status": "active", "note": "PCR·신속항원 청구분은 코로나 종료 시 제외"}, {"id": "SOC-M02", "task": "급여명세서 발송", "cycle": "monthly", "area": "청구", "systems": [], "desc": "급여명세서 발송", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M03", "task": "적기통보", "cycle": "monthly", "area": "행정", "systems": ["케어포"], "desc": "다음달 일정 적기통보", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M04", "task": "급여내용 계약·일정 등록", "cycle": "monthly", "area": "행정", "systems": ["공단", "케어포"], "desc": "급여내용 계약 및 월 일정 등록·연동", "src_count": 2, "aliases": ["급여내용계약 및 일정등록"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M05", "task": "사례관리", "cycle": "monthly", "area": "사례관리", "systems": ["케어포"], "desc": "사례관리 대상자 선정·회의·기록", "src_count": 3, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M06", "task": "청소일정 보고", "cycle": "monthly", "area": "환경관리", "systems": [], "desc": "월초 청소일정 작성하여 보고", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M07", "task": "목욕명단 출력", "cycle": "monthly", "area": "어르신케어", "systems": [], "desc": "월 목욕명단 출력", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M08", "task": "치매안심센터 등록", "cycle": "monthly", "area": "행정", "systems": [], "desc": "치매 어르신 치매안심센터 등록, 보호자 연락, 조호물품 수령·제공", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M09", "task": "소화기 점검", "cycle": "monthly", "area": "안전", "systems": [], "desc": "4·5층 소화기 점검", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M10", "task": "안전점검·시설운영일지", "cycle": "monthly", "area": "안전", "systems": ["케어포"], "desc": "안전점검 및 시설운영일지 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M11", "task": "프로그램관리자 업무수행일지", "cycle": "monthly", "area": "프로그램", "systems": ["케어포"], "desc": "프로그램관리자 업무수행일지 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M12", "task": "프로그램 회의", "cycle": "monthly", "area": "프로그램", "systems": [], "desc": "월 프로그램 회의", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M13", "task": "외부강사 일정 협의", "cycle": "monthly", "area": "프로그램", "systems": [], "desc": "외부강사 월간계획표 수신·스케줄 조정, 청구비용·계좌 전달", "src_count": 2, "aliases": ["외부강사 일정협의"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M14", "task": "제공기록지 담당자 조정", "cycle": "monthly", "area": "기록", "systems": ["케어포"], "desc": "제공기록지 담당자 변경 및 조정", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M15", "task": "요양보호사 휴무표 조정", "cycle": "monthly", "area": "관리", "systems": [], "desc": "요양보호사 휴무표 조정", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M16", "task": "사회복무요원 월 평가·인건비", "cycle": "monthly", "area": "사회복무요원", "systems": [], "desc": "일일업무 평가하여 특별휴가 지급, 인건비·근무표 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M17", "task": "직원회의 회의록", "cycle": "monthly", "area": "관리", "systems": ["케어포"], "desc": "직원회의 회의록 작성", "src_count": 2, "aliases": ["직원회의 회의록 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M18", "task": "직원 교육(신규·직무)", "cycle": "monthly", "area": "교육", "systems": [], "desc": "신규 또는 직무 교육 진행", "src_count": 2, "aliases": ["직원교육(신규 또는 직무교육)"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M19", "task": "월간 환경 점검", "cycle": "monthly", "area": "환경관리", "systems": [], "desc": "에어컨 필터 청소, 담요·베개·이불 세탁, 공기청정기 필터, 블랙박스 점검", "src_count": 2, "aliases": ["에어컨 필터 청소, 담요 세탁", "공기청정기 필터 세척", "블랙박스 점검"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M23", "task": "목욕·미용·기저귀 청구", "cycle": "monthly", "area": "청구", "systems": [], "desc": "목욕비·미용비·기저귀 청구", "src_count": 1, "aliases": ["목욕비, 미용비, 기저귀 청구"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-M25", "task": "기저귀 주문", "cycle": "monthly", "area": "총무", "systems": [], "desc": "기저귀 주문", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q01", "task": "재난상황 대응훈련", "cycle": "quarterly", "area": "안전", "systems": ["케어포"], "desc": "재난상황 대응훈련, 사진 촬영, 훈련일지 작성", "src_count": 2, "aliases": [], "publish": false, "status": "review", "note": "분기/반기 표기 혼재 — 법정 주기 확인"}, {"id": "SOC-Q02", "task": "소화·경보설비 사용교육", "cycle": "quarterly", "area": "안전", "systems": [], "desc": "소화 및 경보설비 사용방법 교육, 교육일지 작성", "src_count": 2, "aliases": ["소화 및 경보설비 사용방법 교육"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q03", "task": "복지포상 작성·회의", "cycle": "quarterly", "area": "관리", "systems": ["케어포"], "desc": "케어포 복지포상 작성, 복지 및 포상 회의록 작성", "src_count": 2, "aliases": ["복지포상 작성", "복지 및 포상 회의록 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q04", "task": "사례관리 회의록", "cycle": "quarterly", "area": "사례관리", "systems": [], "desc": "사례관리 회의록 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q05", "task": "운영위원회 회의록", "cycle": "quarterly", "area": "관리", "systems": [], "desc": "운영위원회 회의록 작성", "src_count": 2, "aliases": ["운영 위원회 회의록 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q06", "task": "상담일지 점검·보강", "cycle": "quarterly", "area": "상담", "systems": [], "desc": "상담일지 확인 및 보강(평가 관련)", "src_count": 2, "aliases": ["상담일지 확인 및 보강(평가관련)"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q07", "task": "정기소독 점검", "cycle": "quarterly", "area": "환경관리", "systems": [], "desc": "정기소독 점검", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Q08", "task": "프로그램 평가", "cycle": "quarterly", "area": "프로그램", "systems": [], "desc": "프로그램 평가", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-H01", "task": "보호자 간담회", "cycle": "semiannual", "area": "상담", "systems": [], "desc": "보호자 간담회 안내 및 회의록 작성", "src_count": 2, "aliases": ["보호자 회의록 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-H02", "task": "소방안전교육", "cycle": "semiannual", "area": "안전", "systems": [], "desc": "소방안전교육", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-H03", "task": "수급자 관리(반기)", "cycle": "semiannual", "area": "행정", "systems": [], "desc": "반기 수급자 관리", "src_count": 2, "aliases": ["수급자관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y01", "task": "사업계획서 작성", "cycle": "yearly", "area": "행정", "systems": [], "desc": "연도별 사업계획서 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y02", "task": "노인복지시설 지도점검", "cycle": "yearly", "area": "행정", "systems": [], "desc": "현금출납부·총계정원장·지도점검 제출서식 준비", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y03", "task": "직원 건강검진·고충처리 관리", "cycle": "yearly", "area": "인사", "systems": ["케어포"], "desc": "직원 건강검진 확인·관리·케어포 등록, 고충처리 관리", "src_count": 2, "aliases": ["직원 건강검진 관리", "고충처리 및 건강검진관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y04", "task": "직원 법정의무교육 관리", "cycle": "yearly", "area": "교육", "systems": [], "desc": "법정의무교육 공지·수료증 관리·점검", "src_count": 2, "aliases": ["직원 법정의무교육 관리", "법정의무교육 점검"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y05", "task": "입소이용의뢰서 작성·제출", "cycle": "yearly", "area": "계약", "systems": [], "desc": "기초수급자 입소이용의뢰서 작성 및 달서구청 제출", "src_count": 2, "aliases": ["입소이용의뢰서 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y06", "task": "급여제공 결과평가", "cycle": "yearly", "area": "행정", "systems": [], "desc": "수급자 급여제공 결과평가 후 급여제공계획서 재작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y07", "task": "각종 점검표·결과 제출", "cycle": "yearly", "area": "행정", "systems": ["희망이음"], "desc": "필요 점검표·결과 작성하여 메일·희망이음 보고", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y08", "task": "수급자 안전관리 설명", "cycle": "yearly", "area": "행정", "systems": ["케어포"], "desc": "수급자 안전관리 설명 및 기록", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y09", "task": "변경계약서 작성", "cycle": "yearly", "area": "계약", "systems": [], "desc": "변경계약서 작성", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-Y10", "task": "차량 주유·점검", "cycle": "yearly", "area": "총무", "systems": [], "desc": "차량 주유 및 점검", "src_count": 2, "aliases": ["차량주유 및 점검"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A01", "task": "외근", "cycle": "adhoc", "area": "외근", "systems": [], "desc": "다이소 물품구매, 구청, 우체국, 어르신 필요물품 등 외근", "src_count": 4, "aliases": ["달서구청 업무"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A02", "task": "병원 동행·대리처방", "cycle": "adhoc", "area": "외근", "systems": [], "desc": "어르신 병원 동행, 대리처방, 의사소견서 제출", "src_count": 2, "aliases": ["병원업무 도움"], "publish": true, "status": "active", "note": "센터 차별점 · 월말 공시대상"}, {"id": "SOC-A03", "task": "차량 관리", "cycle": "adhoc", "area": "총무", "systems": ["케어포"], "desc": "차량 정비 시 정비기록 케어포 작성", "src_count": 4, "aliases": ["차량관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A04", "task": "신규 어르신 상담·계약", "cycle": "adhoc", "area": "계약", "systems": ["공단", "케어포"], "desc": "신규 계약, 기초평가, 공단 계약등록, 행정업무 및 물품 준비", "src_count": 2, "aliases": ["수급자 계약", "신규 어르신 상담 및 계약", "신규 수급자 행정업무"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A05", "task": "장기요양인정서 신청(신규·갱신)", "cycle": "adhoc", "area": "계약", "systems": [], "desc": "보호자 연락, 인정서 신규·갱신 신청, 서류 발급 확인", "src_count": 2, "aliases": ["장기요양인정서 신청(신규, 갱신)"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A06", "task": "수급자 계약내용 변경", "cycle": "adhoc", "area": "계약", "systems": [], "desc": "수급자 계약내용 변경, 계약서 파일 관리", "src_count": 2, "aliases": ["수급자 계약서 파일 만들기"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A07", "task": "복지용구 관리·신청", "cycle": "adhoc", "area": "복지용구", "systems": [], "desc": "복지용구 필요 시 상담·신청·수령, 보호자 연락, 관리대장 작성", "src_count": 2, "aliases": ["복지용구 관리", "복지용구 상담 신청 수령 등", "복지용구 신청"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A09", "task": "자원봉사자 관리", "cycle": "adhoc", "area": "관리", "systems": [], "desc": "자원봉사자 연락·서류 관리·실적 등록", "src_count": 2, "aliases": ["자원봉사자 관리", "봉사자 관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A10", "task": "물품 사용규정·청소방법 작성", "cycle": "adhoc", "area": "환경관리", "systems": [], "desc": "물품 사용규정·청소방법 작성·수정·공지", "src_count": 2, "aliases": ["물품 사용규정 및 청소방법 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A11", "task": "비품 관리", "cycle": "adhoc", "area": "총무", "systems": ["케어포"], "desc": "케어포 비품관리 작성, 라벨링", "src_count": 2, "aliases": ["비품관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A12", "task": "신규직원 입사 행정", "cycle": "adhoc", "area": "인사", "systems": ["네이버웍스", "케어포", "푸른씨앗", "희망이음"], "desc": "필요서류 안내, 케어포·웍스·범죄경력·사대보험·푸른씨앗·희망이음 등록, 물품 지급", "src_count": 2, "aliases": ["신규직원 입사", "신규 입사자 관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A13", "task": "기존직원 퇴사 행정", "cycle": "adhoc", "area": "인사", "systems": ["네이버웍스", "케어포", "푸른씨앗", "희망이음"], "desc": "퇴사 행정업무, 물품 반납, 각 시스템 정리", "src_count": 2, "aliases": ["기존직원 퇴사", "퇴사자 관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A14", "task": "회의록 작성", "cycle": "adhoc", "area": "행정", "systems": ["케어포"], "desc": "회의 내용 공지, 케어포 회의록 작성", "src_count": 2, "aliases": ["각종 회의록 작성"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A15", "task": "보호자·어르신 상담", "cycle": "adhoc", "area": "상담", "systems": [], "desc": "보호자·어르신 상담 시 상담일지 작성", "src_count": 2, "aliases": ["상담"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A16", "task": "송영표 수정·스케줄 변경", "cycle": "adhoc", "area": "송영", "systems": [], "desc": "일정 변경 시 송영표 수정, 송영 스케줄 변경", "src_count": 2, "aliases": ["송영표 수정", "송영스케쥴 변경"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A19", "task": "직원 교육 수료증 확인", "cycle": "adhoc", "area": "교육", "systems": [], "desc": "치매교육·보수교육 수료증 확인 및 보고", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A20", "task": "요양팀 근무일정표 조정", "cycle": "adhoc", "area": "관리", "systems": [], "desc": "요양팀 근무일정표 조정", "src_count": 2, "aliases": ["근무일정표 조정(요양팀)"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A22", "task": "시설 관리", "cycle": "adhoc", "area": "환경관리", "systems": [], "desc": "시설 점검·관리", "src_count": 2, "aliases": [], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A25", "task": "수급자 입퇴소 등록·관리", "cycle": "adhoc", "area": "사통망", "systems": ["사통망", "희망이음"], "desc": "입소·퇴소 시 수급자 등록 및 관리", "src_count": 1, "aliases": ["입소자 및 퇴소자 관리", "수급자등록 및 관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A26", "task": "인사 서류 관리", "cycle": "adhoc", "area": "인사", "systems": ["사통망", "희망이음"], "desc": "입퇴사·변경 시 인사 서류 관리", "src_count": 1, "aliases": ["인사서류 및 관리"], "publish": false, "status": "active", "note": ""}, {"id": "SOC-A27", "task": "각종 훈련·교육일지 작성", "cycle": "adhoc", "area": "기록", "systems": ["케어포"], "desc": "각종 훈련 및 교육 일지 작성", "src_count": 1, "aliases": [], "publish": false, "status": "active", "note": ""}]}}};
+const CYCLES = [["daily","매일"],["weekly","매주"],["monthly","매월"],["quarterly","분기"],["semiannual","반기"],["yearly","연간"],["adhoc","수시"]];
+const CL = Object.fromEntries(CYCLES);
+const LSKEY = "nori-jd-collector";
+let state = { staff:"", job:"", picked:{}, custom:[] }; // picked: id->true
+let filterCycle = "all", searchQ = "";
+
+// ---------- 시작 화면 ----------
+const jobNames = Object.keys(PRESET.jobs);
+const jobPick = document.getElementById("jobPick");
+let pickedJob = "";
+jobNames.forEach(j => {
+  const b = document.createElement("button"); b.textContent = j;
+  b.onclick = () => { pickedJob = j; [...jobPick.children].forEach(c=>c.classList.toggle("on", c===b)); checkGo(); };
+  jobPick.appendChild(b);
+});
+const nameInput = document.getElementById("staffName");
+const goBtn = document.getElementById("goBtn");
+nameInput.oninput = checkGo;
+function checkGo(){ goBtn.disabled = !(nameInput.value.trim() && pickedJob); }
+goBtn.onclick = () => start(nameInput.value.trim(), pickedJob);
+
+// 이어서 작성
+const saved = localStorage.getItem(LSKEY);
+if (saved) {
+  try {
+    const s = JSON.parse(saved);
+    if (s.staff && s.job) {
+      document.getElementById("resumeBox").innerHTML =
+        `<a id="resumeLink">${s.staff}(${s.job}) 이어서 작성</a>`;
+      document.getElementById("resumeLink").onclick = () => { state = s; start(s.staff, s.job); };
+    }
+  } catch(e){}
+}
+
+function start(staff, job) {
+  state.staff = staff; state.job = job;
+  if (!state.picked) state.picked = {};
+  if (!state.custom) state.custom = [];
+  document.getElementById("start").style.display = "none";
+  document.getElementById("appHeader").style.display = "flex";
+  document.getElementById("app").style.display = "grid";
+  document.getElementById("whoLabel").textContent = `${staff} 님 · ${job}`;
+  buildChips(); renderPool(); renderMine(); persist();
+}
+
+// ---------- 필터 칩 ----------
+function buildChips() {
+  const el = document.getElementById("cycleChips");
+  const mk = (key, label) => { const c = document.createElement("button"); c.className = "chip" + (key===filterCycle?" on":""); c.textContent = label; c.onclick = () => { filterCycle = key; buildChips(); renderPool(); }; return c; };
+  el.innerHTML = ""; el.appendChild(mk("all","전체"));
+  CYCLES.forEach(([k,l]) => el.appendChild(mk(k,l)));
+}
+
+// ---------- 풀 렌더 ----------
+document.getElementById("search").oninput = e => { searchQ = e.target.value.trim(); renderPool(); };
+function tasksOfJob(){ return PRESET.jobs[state.job].tasks; }
+function renderPool() {
+  const list = document.getElementById("poolList");
+  list.innerHTML = "";
+  const tasks = tasksOfJob().filter(t => {
+    if (filterCycle !== "all" && t.cycle !== filterCycle) return false;
+    if (searchQ) { const blob = (t.task + " " + (t.desc||"") + " " + (t.aliases||[]).join(" ") + " " + t.area); if (!blob.toLowerCase().includes(searchQ.toLowerCase())) return false; }
+    return true;
+  });
+  CYCLES.forEach(([ck,label]) => {
+    const items = tasks.filter(t => t.cycle === ck);
+    if (!items.length) return;
+    const h = document.createElement("div"); h.className = "sec-title"; h.textContent = `${label} (${items.length})`; list.appendChild(h);
+    items.forEach(t => list.appendChild(poolItem(t)));
+  });
+  if (!list.children.length) list.innerHTML = '<div class="mine-empty">검색 결과가 없습니다</div>';
+}
+function poolItem(t) {
+  const dep = t.status === "deprecated_candidate";
+  const el = document.createElement("div");
+  el.className = "item" + (state.picked[t.id] ? " picked" : "") + (dep ? " dep" : "");
+  el.draggable = true;
+  el.ondragstart = e => e.dataTransfer.setData("text/id", t.id);
+  const sys = (t.systems||[]).map(s=>`<span class="tag t-sys">${s}</span>`).join("");
+  const pub = t.publish ? '<span class="tag t-pub">★공시</span>' : "";
+  const depTag = dep ? '<span class="tag t-dep">폐지후보</span>' : "";
+  el.innerHTML = `<div class="chk">${state.picked[t.id]?"✓":""}</div>
+    <div class="body"><div class="nm">${t.task}</div>
+    <div class="ds">${t.desc||""}</div>
+    <div class="tags"><span class="tag t-area">${t.area}</span>${sys}${pub}${depTag}</div></div>`;
+  el.onclick = () => togglePick(t.id);
+  return el;
+}
+let lastFlash = null, toastTimer;
+function showToast(msg, isRemove) {
+  const el = document.getElementById("toast");
+  el.textContent = msg; el.classList.toggle("rm", !!isRemove); el.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove("show"), 1600);
+}
+function togglePick(id) {
+  const adding = !state.picked[id];
+  const t = tasksOfJob().find(x => x.id === id);
+  if (adding) state.picked[id] = true; else delete state.picked[id];
+  lastFlash = adding ? id : null;
+  renderPool(); renderMine(); persist();
+  showToast(adding ? `✓ '${t.task}' 담음` : `✕ '${t.task}' 뺌`, !adding);
+}
+
+// ---------- 내 직무기술서 ----------
+const mineList = document.getElementById("mineList");
+mineList.ondragover = e => e.preventDefault();
+mineList.ondrop = e => { const id = e.dataTransfer.getData("text/id"); if (id && !state.picked[id]) { state.picked[id]=true; renderPool(); renderMine(); persist(); } };
+function renderMine() {
+  const picked = tasksOfJob().filter(t => state.picked[t.id]);
+  const total = picked.length + state.custom.length;
+  document.getElementById("cntLabel").textContent = `${total}개 담음`;
+  document.getElementById("mineCnt").textContent = `(${total})`;
+  document.getElementById("mbCnt").textContent = `${total}개 담음`;
+  mineList.innerHTML = "";
+  if (!total) { mineList.innerHTML = '<div class="mine-empty">왼쪽에서 내가 하는 업무를<br>눌러 담아주세요</div>'; lastFlash = null; return; }
+  CYCLES.forEach(([ck,label]) => {
+    const rows = picked.filter(t => t.cycle === ck).map(t => ({nm:t.task, cyc:label, custom:false, id:t.id}))
+      .concat(state.custom.filter(c => c.cycle === ck).map((c,i) => ({nm:c.task, cyc:label, custom:true, idx: state.custom.indexOf(c)})));
+    if (!rows.length) return;
+    const h = document.createElement("div"); h.className = "sec-title"; h.textContent = label; mineList.appendChild(h);
+    rows.forEach(r => {
+      const isFlash = !r.custom && r.id === lastFlash;
+      const row = document.createElement("div"); row.className = "mrow" + (r.custom?" custom":"") + (isFlash?" flash":"");
+      row.innerHTML = `<span class="mnm">${r.nm}</span><span class="x">✕</span>`;
+      row.querySelector(".x").onclick = () => { if (r.custom) state.custom.splice(r.idx,1); else delete state.picked[r.id]; renderPool(); renderMine(); persist(); };
+      if (isFlash) setTimeout(() => row.scrollIntoView({block:"nearest", behavior:"smooth"}), 30);
+      mineList.appendChild(row);
+    });
+  });
+  lastFlash = null;
+}
+document.getElementById("addBtn").onclick = addCustom;
+document.getElementById("customTask").addEventListener("keydown", e => { if (e.key==="Enter") addCustom(); });
+function addCustom() {
+  const inp = document.getElementById("customTask"); const v = inp.value.trim(); if (!v) return;
+  state.custom.push({ task: v, cycle: document.getElementById("customCycle").value, area: "기타", custom: true });
+  inp.value = ""; renderMine(); persist();
+  showToast(`✓ '${v}' 추가`);
+}
+
+// ---------- 저장/출력 ----------
+function persist(){ localStorage.setItem(LSKEY, JSON.stringify(state)); }
+function buildExport() {
+  const picked = tasksOfJob().filter(t => state.picked[t.id]).map(t => ({
+    id:t.id, task:t.task, cycle:t.cycle, area:t.area, systems:t.systems, publish:t.publish, status:t.status, desc:t.desc
+  }));
+  return { version:"collector-1", staff:state.staff, job:state.job,
+    savedAt: new Date().toISOString().slice(0,10),
+    selected: picked, custom: state.custom };
+}
+document.getElementById("saveBtn").onclick = () => {
+  const data = buildExport();
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `직무기술서_${state.staff}_${data.savedAt}.json`; a.click();
+};
+document.getElementById("previewBtn").onclick = showPreview;
+document.getElementById("pvClose").onclick = () => document.getElementById("preview").classList.remove("show");
+function showPreview() {
+  const picked = tasksOfJob().filter(t => state.picked[t.id]);
+  let rows = "";
+  CYCLES.forEach(([ck,label]) => {
+    const items = picked.filter(t=>t.cycle===ck).map(t=>({nm:t.task,ds:t.desc||"",sys:(t.systems||[]).join(", ")}))
+      .concat(state.custom.filter(c=>c.cycle===ck).map(c=>({nm:c.task+" (직접추가)",ds:"",sys:""})));
+    items.forEach((it,i) => {
+      rows += `<tr>${i===0?`<td rowspan="${items.length}"><b>${label}</b></td>`:""}<td>${it.nm}</td><td>${it.ds}</td><td>${it.sys}</td></tr>`;
+    });
+  });
+  const total = picked.length + state.custom.length;
+  document.getElementById("docBody").innerHTML = `
+    <h1>직무기술서</h1>
+    <table class="meta"><tr><th>성명</th><td>${state.staff}</td><th>직종</th><td>${state.job}</td></tr>
+    <tr><th>소속</th><td>노리주간보호센터</td><th>작성일</th><td>${buildExport().savedAt}</td></tr>
+    <tr><th>업무 수</th><td colspan="3">${total}개</td></tr></table>
+    <table><thead><tr><th style="width:70px">주기</th><th style="width:200px">업무명</th><th>업무 내용</th><th style="width:120px">시스템</th></tr></thead><tbody>${rows||'<tr><td colspan="4">담은 업무 없음</td></tr>'}</tbody></table>`;
+  document.getElementById("preview").classList.add("show");
+}
+
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function exportExcel(){
+  const picked = tasksOfJob().filter(t => state.picked[t.id]);
+  const d = buildExport();
+  let rows = "";
+  CYCLES.forEach(([ck,label]) => {
+    const items = picked.filter(t=>t.cycle===ck).map(t=>({nm:t.task, ds:t.desc||"", ar:t.area, sys:(t.systems||[]).join(", ")}))
+      .concat(state.custom.filter(c=>c.cycle===ck).map(c=>({nm:c.task+" (직접추가)", ds:"", ar:"기타", sys:""})));
+    items.forEach((it,i) => { rows += `<tr>${i===0?`<td rowspan="${items.length}" style="background:#eef2ea;font-weight:bold;text-align:center;vertical-align:middle">${label}</td>`:""}<td>${esc(it.nm)}</td><td>${esc(it.ds)}</td><td>${it.ar}</td><td>${it.sys}</td></tr>`; });
+  });
+  const total = picked.length + state.custom.length;
+  const html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>직무기술서</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>
+  <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:맑은 고딕,sans-serif;font-size:11pt">
+   <tr><td colspan="5" style="font-size:18px;font-weight:bold;text-align:center;height:36px">직 무 기 술 서</td></tr>
+   <tr><td style="background:#eef2ea;font-weight:bold;width:80px">성명</td><td>${esc(d.staff)}</td><td style="background:#eef2ea;font-weight:bold;width:80px">직종</td><td colspan="2">${d.job}</td></tr>
+   <tr><td style="background:#eef2ea;font-weight:bold">소속</td><td>노리주간보호센터</td><td style="background:#eef2ea;font-weight:bold">작성일</td><td colspan="2">${d.savedAt}</td></tr>
+   <tr><td style="background:#eef2ea;font-weight:bold">업무 수</td><td colspan="4">${total}개</td></tr>
+   <tr><th style="background:#d6e2cc;width:64px">주기</th><th style="background:#d6e2cc;width:210px">업무명</th><th style="background:#d6e2cc">업무 내용</th><th style="background:#d6e2cc;width:90px">영역</th><th style="background:#d6e2cc;width:120px">시스템</th></tr>
+   ${rows || '<tr><td colspan="5">담은 업무 없음</td></tr>'}
+  </table></body></html>`;
+  const blob = new Blob(["﻿" + html], {type:"application/vnd.ms-excel;charset=utf-8"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+  a.download = `직무기술서_${d.staff}_${d.savedAt}.xls`; a.click();
+}
+document.getElementById("xlsBtn").onclick = exportExcel;
+document.getElementById("mbView").onclick = () => document.querySelector(".mine").scrollIntoView({behavior:"smooth", block:"start"});
+</script>
