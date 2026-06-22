@@ -327,7 +327,7 @@ function buildExport() {
     selected: picked, custom: state.custom };
 }
 // 구글 Apps Script 웹앱 URL (배포 후 입력 — 비어 있으면 파일 저장만)
-const SHEET_ENDPOINT = "";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzzc59KBPujKa3f-FIej4NnGVNsouPFRRuxT5oTf-BpCeCGq1sRscxuh3yUEkDsDNEm/exec";
 document.getElementById("saveBtn").onclick = () => {
   const data = buildExport();
   // 1) 파일 다운로드 (항상 — 백업)
@@ -337,7 +337,7 @@ document.getElementById("saveBtn").onclick = () => {
   // 2) 중앙 전송 (URL 설정 시)
   if (SHEET_ENDPOINT && SHEET_ENDPOINT.indexOf("http") === 0) {
     showToast("전송 중…");
-    fetch(SHEET_ENDPOINT, { method: "POST", body: JSON.stringify(data) })
+    fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
       .then(() => showToast("✓ 제출 완료 — 자동 전송됨"))
       .catch(() => showToast("⚠ 자동 전송 실패 — 저장된 파일을 보내주세요", true));
   } else {
