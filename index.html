@@ -220,7 +220,7 @@ function start(staff, job) {
   let seeded = false;
   if (!state.seeded && Object.keys(state.picked).length === 0) {
     PRESET.jobs[job].tasks.forEach(t => {
-      if ((t.src_count || 0) >= 2 && t.status === "active") state.picked[t.id] = true;
+      if ((t.cycle === "daily" || t.cycle === "weekly") && t.status === "active") state.picked[t.id] = true;
     });
     seeded = Object.keys(state.picked).length > 0;
   }
