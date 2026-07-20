@@ -143,6 +143,13 @@
     .cols { grid-template-columns: 1fr; }
     .mine { position: static; }
   }
+  /* 누를 때 반응(모바일 탭 피드백) — 기존 transition:0.2s가 transform도 커버 */
+  .start-card .go:active, .jobpick button:active, .chip:active { transform: scale(0.97); }
+  .add button:active { transform: translateY(0) scale(0.97); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    .start-card .go:active, .jobpick button:active, .add button:active, .chip:active { transform: none; }
+  }
 </style>
 
 <div id="start">
