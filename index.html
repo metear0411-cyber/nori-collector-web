@@ -424,7 +424,7 @@ function exportExcel(){
   });
   const total = picked.length + state.custom.length;
   const html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>직무기술서</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>
-  <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:맑은 고딕,sans-serif;font-size:11pt">
+  <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:'Pretendard','맑은 고딕',sans-serif;font-size:11pt">
    <tr><td colspan="5" style="font-size:18px;font-weight:bold;text-align:center;height:36px">직 무 기 술 서</td></tr>
    <tr><td style="background:#eef2ea;font-weight:bold;width:80px">성명</td><td>${esc(d.staff)}</td><td style="background:#eef2ea;font-weight:bold;width:80px">직종</td><td colspan="2">${d.job}</td></tr>
    <tr><td style="background:#eef2ea;font-weight:bold">소속</td><td>노리주간보호센터</td><td style="background:#eef2ea;font-weight:bold">작성일</td><td colspan="2">${d.savedAt}</td></tr>
