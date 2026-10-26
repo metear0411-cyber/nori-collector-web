@@ -240,7 +240,7 @@ if (saved) {
     const s = JSON.parse(saved);
     if (s.staff && s.job) {
       document.getElementById("resumeBox").innerHTML =
-        `<a id="resumeLink">${s.staff}(${s.job}) 이어서 작성</a>`;
+        `<a id="resumeLink">${esc(s.staff)}(${esc(s.job)}) 이어서 작성</a>`;
       document.getElementById("resumeLink").onclick = () => { state = s; start(s.staff, s.job); };
     }
   } catch(e){}
@@ -345,7 +345,7 @@ function renderMine() {
     rows.forEach(r => {
       const isFlash = !r.custom && r.id === lastFlash;
       const row = document.createElement("div"); row.className = "mrow" + (r.custom?" custom":"") + (isFlash?" flash":"");
-      row.innerHTML = `<span class="mnm">${r.nm}</span><span class="x">✕</span>`;
+      row.innerHTML = `<span class="mnm">${esc(r.nm)}</span><span class="x">✕</span>`;
       row.querySelector(".x").onclick = () => { if (r.custom) state.custom.splice(r.idx,1); else delete state.picked[r.id]; renderPool(); renderMine(); persist(); };
       if (isFlash) setTimeout(() => row.scrollIntoView({block:"nearest", behavior:"smooth"}), 30);
       mineList.appendChild(row);
@@ -369,7 +369,8 @@ function buildExport() {
     id:t.id, task:t.task, cycle:t.cycle, area:t.area, systems:t.systems, publish:t.publish, status:t.status, desc:t.desc
   }));
   return { version:"collector-1", staff:state.staff, job:state.job,
-    savedAt: new Date().toISOString().slice(0,10),
+    // 한국시간 날짜(toISOString은 UTC라 KST 00~09시에 전날로 찍힌다)
+    savedAt: new Date(Date.now() + 9*3600*1000).toISOString().slice(0,10),
     selected: picked, custom: state.custom };
 }
 // 구글 Apps Script 웹앱 URL (배포 후 입력 — 비어 있으면 파일 저장만)
@@ -384,7 +385,8 @@ document.getElementById("saveBtn").onclick = () => {
   if (SHEET_ENDPOINT && SHEET_ENDPOINT.indexOf("http") === 0) {
     showToast("전송 중…");
     fetch(SHEET_ENDPOINT, { method: "POST", mode: "no-cors", body: JSON.stringify(data) })
-      .then(() => showToast("✓ 제출 완료 — 자동 전송됨"))
+      // no-cors라 응답을 읽을 수 없다 — 전송 요청을 보냈다는 사실만 말한다.
+      .then(() => showToast("✓ 전송했어요 (수신 확인은 안 돼요) — 저장된 파일도 보관해 주세요"))
       .catch(() => showToast("⚠ 자동 전송 실패 — 저장된 파일을 보내주세요", true));
   } else {
     showToast("✓ 파일로 저장됨");
@@ -399,13 +401,13 @@ function showPreview() {
     const items = picked.filter(t=>t.cycle===ck).map(t=>({nm:t.task,ds:t.desc||"",sys:(t.systems||[]).join(", ")}))
       .concat(state.custom.filter(c=>c.cycle===ck).map(c=>({nm:c.task+" (직접추가)",ds:"",sys:""})));
     items.forEach((it,i) => {
-      rows += `<tr>${i===0?`<td rowspan="${items.length}"><b>${label}</b></td>`:""}<td>${it.nm}</td><td>${it.ds}</td><td>${it.sys}</td></tr>`;
+      rows += `<tr>${i===0?`<td rowspan="${items.length}"><b>${label}</b></td>`:""}<td>${esc(it.nm)}</td><td>${esc(it.ds)}</td><td>${esc(it.sys)}</td></tr>`;
     });
   });
   const total = picked.length + state.custom.length;
   document.getElementById("docBody").innerHTML = `
     <h1>직무기술서</h1>
-    <table class="meta"><tr><th>성명</th><td>${state.staff}</td><th>직종</th><td>${state.job}</td></tr>
+    <table class="meta"><tr><th>성명</th><td>${esc(state.staff)}</td><th>직종</th><td>${esc(state.job)}</td></tr>
     <tr><th>소속</th><td>노리주간보호센터</td><th>작성일</th><td>${buildExport().savedAt}</td></tr>
     <tr><th>업무 수</th><td colspan="3">${total}개</td></tr></table>
     <table><thead><tr><th style="width:70px">주기</th><th style="width:200px">업무명</th><th>업무 내용</th><th style="width:120px">시스템</th></tr></thead><tbody>${rows||'<tr><td colspan="4">담은 업무 없음</td></tr>'}</tbody></table>`;
@@ -420,13 +422,13 @@ function exportExcel(){
   CYCLES.forEach(([ck,label]) => {
     const items = picked.filter(t=>t.cycle===ck).map(t=>({nm:t.task, ds:t.desc||"", ar:t.area, sys:(t.systems||[]).join(", ")}))
       .concat(state.custom.filter(c=>c.cycle===ck).map(c=>({nm:c.task+" (직접추가)", ds:"", ar:"기타", sys:""})));
-    items.forEach((it,i) => { rows += `<tr>${i===0?`<td rowspan="${items.length}" style="background:#eef2ea;font-weight:bold;text-align:center;vertical-align:middle">${label}</td>`:""}<td>${esc(it.nm)}</td><td>${esc(it.ds)}</td><td>${it.ar}</td><td>${it.sys}</td></tr>`; });
+    items.forEach((it,i) => { rows += `<tr>${i===0?`<td rowspan="${items.length}" style="background:#eef2ea;font-weight:bold;text-align:center;vertical-align:middle">${label}</td>`:""}<td>${esc(it.nm)}</td><td>${esc(it.ds)}</td><td>${esc(it.ar)}</td><td>${esc(it.sys)}</td></tr>`; });
   });
   const total = picked.length + state.custom.length;
   const html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>직무기술서</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>
   <table border="1" cellspacing="0" cellpadding="5" style="border-collapse:collapse;font-family:'Pretendard','맑은 고딕',sans-serif;font-size:11pt">
    <tr><td colspan="5" style="font-size:18px;font-weight:bold;text-align:center;height:36px">직 무 기 술 서</td></tr>
-   <tr><td style="background:#eef2ea;font-weight:bold;width:80px">성명</td><td>${esc(d.staff)}</td><td style="background:#eef2ea;font-weight:bold;width:80px">직종</td><td colspan="2">${d.job}</td></tr>
+   <tr><td style="background:#eef2ea;font-weight:bold;width:80px">성명</td><td>${esc(d.staff)}</td><td style="background:#eef2ea;font-weight:bold;width:80px">직종</td><td colspan="2">${esc(d.job)}</td></tr>
    <tr><td style="background:#eef2ea;font-weight:bold">소속</td><td>노리주간보호센터</td><td style="background:#eef2ea;font-weight:bold">작성일</td><td colspan="2">${d.savedAt}</td></tr>
    <tr><td style="background:#eef2ea;font-weight:bold">업무 수</td><td colspan="4">${total}개</td></tr>
    <tr><th style="background:#d6e2cc;width:64px">주기</th><th style="background:#d6e2cc;width:210px">업무명</th><th style="background:#d6e2cc">업무 내용</th><th style="background:#d6e2cc;width:90px">영역</th><th style="background:#d6e2cc;width:120px">시스템</th></tr>
